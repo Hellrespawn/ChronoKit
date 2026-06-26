@@ -20,12 +20,13 @@ function M.build_gui(player)
 		gui.add({
 			type = "sprite-button",
 			name = "chronokit_button_playpause",
+			tags = { mod = "chronokit", action = "playpause" },
 			style = "chronokit_sprite_style",
 			sprite = game.tick_paused and "utility/pause" or "utility/play",
 		})
-		gui.add({type = "button", name = "chronokit_button_slower", caption = "<",  font_color = constants.colors.white, style = "chronokit_button_style"})
-		gui.add({type = "button", name = "chronokit_button_faster", caption = ">",  font_color = constants.colors.white, style = "chronokit_button_style"})
-		gui.add({type = "button", name = "chronokit_button_speed",  caption = "x1", font_color = constants.colors.white, style = "chronokit_button_style"})
+		gui.add({type = "button", name = "chronokit_button_slower", tags = { mod = "chronokit", action = "slower" }, caption = "<",  font_color = constants.colors.white, style = "chronokit_button_style"})
+		gui.add({type = "button", name = "chronokit_button_faster", tags = { mod = "chronokit", action = "faster" }, caption = ">",  font_color = constants.colors.white, style = "chronokit_button_style"})
+		gui.add({type = "button", name = "chronokit_button_speed",  tags = { mod = "chronokit", action = "speed"   }, caption = "x1", font_color = constants.colors.white, style = "chronokit_button_style"})
 	end
 	return gui
 end

@@ -64,21 +64,22 @@ end
 script.on_event(defines.events.on_runtime_mod_setting_changed, on_runtime_mod_setting_changed)
 
 ------------------------------------------------------------
+local action_handlers = {
+	playpause = speed.handle_playpause,
+	slower    = speed.handle_slower,
+	faster    = speed.handle_faster,
+	speed     = speed.handle_speed_button,
+}
+
 local function on_gui_click(event)
-	if not event.element.name:find("chronokit_", 1, true) then return end
+	local tags = event.element.tags
+	if tags.mod ~= "chronokit" then return end
 
 	local player = game.players[event.player_index]
 
 	if player.admin then
-		if event.element.name == "chronokit_button_playpause" then
-			speed.handle_playpause()
-		elseif event.element.name == "chronokit_button_slower" then
-			speed.handle_slower()
-		elseif event.element.name == "chronokit_button_faster" then
-			speed.handle_faster()
-		elseif event.element.name == "chronokit_button_speed" then
-			speed.handle_speed_button()
-		end
+		local handler = action_handlers[tags.action]
+		if handler then handler() end
 		gui.update_guis()
 	else
 		player.print({"mod-messages.chronokit-message-admins-only"})
