@@ -11,7 +11,7 @@ end
 ------------------------------------------------------------
 local function init_player(player)
 	if player.connected then
-		gui.build_gui(player)
+		gui.create_gui(player)
 	end
 end
 
@@ -46,7 +46,7 @@ local function on_player_init(event)
 	init_player(game.players[event.player_index])
 end
 
-script.on_event({defines.events.on_player_created, defines.events.on_player_joined_game}, on_player_init)
+script.on_event({ defines.events.on_player_created, defines.events.on_player_joined_game }, on_player_init)
 
 ------------------------------------------------------------
 local function on_runtime_mod_setting_changed(event)
@@ -82,7 +82,7 @@ local function on_gui_click(event)
 		if handler then handler() end
 		gui.update_guis()
 	else
-		player.print({"mod-messages.chronokit-message-admins-only"})
+		player.print({ "mod-messages.chronokit-message-admins-only" })
 	end
 end
 

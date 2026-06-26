@@ -2,7 +2,7 @@ local constants = require("constants")
 local gui       = require("gui")
 local speed     = require("speed")
 
-local M = {}
+local M         = {}
 
 function M.on_entity_damaged(event)
 	if event.entity.force.name ~= "player" then return end
@@ -14,10 +14,10 @@ function M.on_entity_damaged(event)
 
 	if settings.global[constants.SETTING_DAMAGE_ACTION].value == constants.DAMAGE_ACTION_PAUSE then
 		speed.handle_playpause()
-		message = {"mod-messages.chronokit-message-game-paused", gps}
+		message = { "mod-messages.chronokit-message-game-paused", gps }
 	else
 		speed.handle_speed_button()
-		message = {"mod-messages.chronokit-message-speed-reset", gps}
+		message = { "mod-messages.chronokit-message-speed-reset", gps }
 	end
 
 	gui.update_guis()

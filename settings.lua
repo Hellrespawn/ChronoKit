@@ -5,7 +5,7 @@ local function assert_fraction(s)
     assert(num and den and tonumber(den) ~= 0, "Invalid fraction: " .. s)
 end
 
-local min_speed_values = {"1/2", "1/4", "1/8"}
+local min_speed_values = { "1/2", "1/4", "1/8" }
 for _, v in ipairs(min_speed_values) do assert_fraction(v) end
 
 data:extend({
@@ -14,7 +14,7 @@ data:extend({
         name           = constants.SETTING_MAX_SPEED,
         setting_type   = "runtime-global",
         default_value  = 64,
-        allowed_values = {2, 4, 8, 16, 32, 64, 128},
+        allowed_values = { 2, 4, 8, 16, 32, 64, 128 },
     },
     {
         type           = "string-setting",
@@ -28,7 +28,7 @@ data:extend({
         name           = constants.SETTING_DAMAGE_ACTION,
         setting_type   = "runtime-global",
         default_value  = constants.DAMAGE_ACTION_RESET,
-        allowed_values = {constants.DAMAGE_ACTION_RESET, constants.DAMAGE_ACTION_PAUSE},
+        allowed_values = { constants.DAMAGE_ACTION_RESET, constants.DAMAGE_ACTION_PAUSE },
     },
     {
         type          = "double-setting",

@@ -4,5 +4,9 @@
       "name": "Steam install",
       "factorioPath": "D:/Steam/steamapps/common/Factorio/bin/x64/factorio.exe"
     }
-  ]
+  ],
+  "Lua.workspace.userThirdParty": [
+    "c:\\Users\\Stef\\AppData\\Roaming\\Code\\User\\workspaceStorage\\f5c168fb49f78a240e89e8f39164f87d\\justarandomgeek.factoriomod-debug\\sumneko-3rd"
+  ],
+  "Lua.workspace.checkThirdParty": "ApplyInMemory"
 }
