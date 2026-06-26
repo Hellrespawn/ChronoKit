@@ -4,6 +4,7 @@ local M = {}
 
 local function parse_fraction(s)
     local num, den = s:match("^(%d+)/(%d+)$")
+    assert(num and den, "Invalid fraction: " .. s)
     return tonumber(num) / tonumber(den)
 end
 
@@ -40,17 +41,20 @@ function M.build_speed_table()
     storage.speed_table = result
 end
 
-function M.init_storage()
-    M.build_speed_table()
+local function reset_state()
     storage.speed_index          = storage.one_index
     storage.previous_speed_index = nil
 end
 
+function M.init_storage()
+    M.build_speed_table()
+    reset_state()
+end
+
 function M.reset_to_normal()
     M.build_speed_table()
-    storage.speed_index          = storage.one_index
-    storage.previous_speed_index = nil
-    game.speed                   = 1
+    reset_state()
+    game.speed = 1
 end
 
 function M.save_speed()
@@ -72,6 +76,7 @@ function M.handle_playpause()
         restore_previous()
         game.tick_paused = false
     else
+        M.save_speed()
         apply_speed(storage.one_index)
         game.tick_paused = true
     end
@@ -82,13 +87,7 @@ function M.handle_slower()
         apply_speed(storage.one_index)
         game.tick_paused = false
     elseif storage.speed_index > 1 then
-        local new_index = storage.speed_index - 1
-        apply_speed(new_index)
-        if new_index == storage.one_index then
-            storage.previous_speed_index = storage.one_index
-        else
-            M.save_speed()
-        end
+        apply_speed(storage.speed_index - 1)
     end
 end
 
@@ -97,9 +96,7 @@ function M.handle_faster()
         apply_speed(storage.one_index)
         game.tick_paused = false
     elseif storage.speed_index < #storage.speed_table then
-        local new_index = storage.speed_index + 1
-        apply_speed(new_index)
-        M.save_speed()
+        apply_speed(storage.speed_index + 1)
     end
 end
 
@@ -113,6 +110,7 @@ function M.handle_speed_button()
             apply_speed(prev)
         end
     else
+        M.save_speed()
         apply_speed(storage.one_index)
     end
 end

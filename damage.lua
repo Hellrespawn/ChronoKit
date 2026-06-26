@@ -12,7 +12,7 @@ function M.on_entity_damaged(event)
 	local gps = string.format("[gps=%d,%d,%s]", pos.x, pos.y, event.entity.surface.name)
 	local message
 
-	if settings.global[constants.SETTING_DAMAGE_ACTION].value == "Pause game" then
+	if settings.global[constants.SETTING_DAMAGE_ACTION].value == constants.DAMAGE_ACTION_PAUSE then
 		speed.handle_playpause()
 		message = {"mod-messages.chronokit-message-game-paused", gps}
 	else
