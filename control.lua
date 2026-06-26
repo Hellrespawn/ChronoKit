@@ -5,7 +5,7 @@ local damage    = require("damage")
 
 ------------------------------------------------------------
 local function init_globals()
-	storage.speed_mem = storage.speed_mem or settings.global[constants.SETTING_MAX_SPEED].value
+	speed.init_storage()
 end
 
 ------------------------------------------------------------
@@ -50,15 +50,15 @@ script.on_event({defines.events.on_player_created, defines.events.on_player_join
 
 ------------------------------------------------------------
 local function on_runtime_mod_setting_changed(event)
-	if event.setting ~= constants.SETTING_MAX_SPEED then return end
-	local max_speed = settings.global[constants.SETTING_MAX_SPEED].value
-	if storage.speed_mem > max_speed then
-		storage.speed_mem = max_speed
-		if game.speed > max_speed then
-			game.speed = max_speed
-			gui.update_guis()
-		end
-	end
+	local watched = {
+		[constants.SETTING_MAX_SPEED]      = true,
+		[constants.SETTING_MIN_SPEED]      = true,
+		[constants.SETTING_START_FACTOR]   = true,
+		[constants.SETTING_STEP_INCREMENT] = true,
+	}
+	if not watched[event.setting] then return end
+	speed.reset_to_normal()
+	gui.update_guis()
 end
 
 script.on_event(defines.events.on_runtime_mod_setting_changed, on_runtime_mod_setting_changed)

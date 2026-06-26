@@ -2,52 +2,119 @@ local constants = require("constants")
 
 local M = {}
 
-local function unpause_to_normal()
-	game.tick_paused = false
-	game.speed = 1
+local function parse_fraction(s)
+    local num, den = s:match("^(%d+)/(%d+)$")
+    return tonumber(num) / tonumber(den)
+end
+
+function M.build_speed_table()
+    local max       = settings.global[constants.SETTING_MAX_SPEED].value
+    local min       = parse_fraction(settings.global[constants.SETTING_MIN_SPEED].value)
+    local start     = settings.global[constants.SETTING_START_FACTOR].value
+    local increment = settings.global[constants.SETTING_STEP_INCREMENT].value
+
+    local slower = {}
+    local s, ratio = 1, start
+    while true do
+        s = s / ratio
+        if s < min then break end
+        table.insert(slower, s)
+        ratio = ratio + increment
+    end
+
+    local faster = {}
+    s, ratio = 1, start
+    while true do
+        s = s * ratio
+        if s > max then break end
+        table.insert(faster, s)
+        ratio = ratio + increment
+    end
+
+    local result = {}
+    for i = #slower, 1, -1 do table.insert(result, slower[i]) end
+    table.insert(result, 1)
+    for _, v in ipairs(faster) do table.insert(result, v) end
+
+    storage.one_index   = #slower + 1
+    storage.speed_table = result
+end
+
+function M.init_storage()
+    M.build_speed_table()
+    storage.speed_index          = storage.one_index
+    storage.previous_speed_index = nil
+end
+
+function M.reset_to_normal()
+    M.build_speed_table()
+    storage.speed_index          = storage.one_index
+    storage.previous_speed_index = nil
+    game.speed                   = 1
 end
 
 function M.save_speed()
-	storage.speed_mem = game.speed
+    storage.previous_speed_index = storage.speed_index
+end
+
+local function apply_speed(index)
+    storage.speed_index = index
+    game.speed = storage.speed_table[index]
+end
+
+local function restore_previous()
+    local target = storage.previous_speed_index or storage.one_index
+    apply_speed(target)
 end
 
 function M.handle_playpause()
-	if game.tick_paused then
-		game.speed = storage.speed_mem
-	else
-		M.save_speed()
-		game.speed = 1
-	end
-	game.tick_paused = not game.tick_paused
+    if game.tick_paused then
+        restore_previous()
+        game.tick_paused = false
+    else
+        apply_speed(storage.one_index)
+        game.tick_paused = true
+    end
 end
 
 function M.handle_slower()
-	if game.tick_paused then
-		unpause_to_normal()
-	elseif game.speed >= 0.2 then
-		game.speed = game.speed / 2
-		if game.speed ~= 1 then M.save_speed() end
-	end
+    if game.tick_paused then
+        apply_speed(storage.one_index)
+        game.tick_paused = false
+    elseif storage.speed_index > 1 then
+        local new_index = storage.speed_index - 1
+        apply_speed(new_index)
+        if new_index == storage.one_index then
+            storage.previous_speed_index = storage.one_index
+        else
+            M.save_speed()
+        end
+    end
 end
 
 function M.handle_faster()
-	if game.tick_paused then
-		unpause_to_normal()
-	elseif game.speed < settings.global[constants.SETTING_MAX_SPEED].value then
-		game.speed = game.speed * 2
-		if game.speed ~= 1 then M.save_speed() end
-	end
+    if game.tick_paused then
+        apply_speed(storage.one_index)
+        game.tick_paused = false
+    elseif storage.speed_index < #storage.speed_table then
+        local new_index = storage.speed_index + 1
+        apply_speed(new_index)
+        M.save_speed()
+    end
 end
 
 function M.handle_speed_button()
-	if game.tick_paused then
-		game.speed = storage.speed_mem
-		game.tick_paused = false
-	elseif game.speed == 1 then
-		game.speed = storage.speed_mem
-	else
-		game.speed = 1
-	end
+    if game.tick_paused then
+        restore_previous()
+        game.tick_paused = false
+    elseif storage.speed_index == storage.one_index then
+        local prev = storage.previous_speed_index
+        if prev and prev ~= storage.one_index then
+            apply_speed(prev)
+        end
+    else
+        apply_speed(storage.one_index)
+    end
 end
 
 return M

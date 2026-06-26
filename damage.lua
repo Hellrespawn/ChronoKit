@@ -1,5 +1,6 @@
 local constants = require("constants")
 local gui       = require("gui")
+local speed     = require("speed")
 
 local M = {}
 
@@ -12,14 +13,13 @@ function M.on_entity_damaged(event)
 	local message
 
 	if settings.global[constants.SETTING_DAMAGE_ACTION].value == "Pause game" then
-		storage.speed_mem = game.speed
-		game.tick_paused = true
+		speed.handle_playpause()
 		message = {"mod-messages.chronokit-message-game-paused", gps}
 	else
+		speed.handle_speed_button()
 		message = {"mod-messages.chronokit-message-speed-reset", gps}
 	end
 
-	game.speed = 1
 	gui.update_guis()
 	for _, player in pairs(game.connected_players) do
 		player.print(message)

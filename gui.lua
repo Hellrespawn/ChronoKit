@@ -40,8 +40,10 @@ function M.update_guis()
 			flow.chronokit_button_speed.style.font_color = constants.colors.white
 			flow.chronokit_button_playpause.sprite = "utility/pause"
 		elseif game.speed == 1 then
+			local prev = storage.previous_speed_index
+			local no_saved = (prev == nil or prev == storage.one_index)
 			flow.chronokit_button_speed.caption = "x1"
-			flow.chronokit_button_speed.style.font_color = constants.colors.white
+			flow.chronokit_button_speed.style.font_color = no_saved and constants.colors.gray or constants.colors.white
 			flow.chronokit_button_playpause.sprite = "utility/play"
 		elseif game.speed < 1 then
 			flow.chronokit_button_speed.caption = string.format("/%1.0f", 1 / game.speed)
