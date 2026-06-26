@@ -25,6 +25,19 @@ default_gui.chronokit_sprite_style =
 	scalable = false,
 }
 
+default_gui.chronokit_playpause_style =
+{
+	type = "button_style",
+	parent = "button",
+	top_padding = -2,
+	right_padding = -2,
+	bottom_padding = -2,
+	left_padding = -2,
+	width = 36,
+	height = 36,
+	scalable = true,
+}
+
 default_gui.chronokit_flow_style =
 {
 	type = "horizontal_flow_style",
