@@ -57,7 +57,7 @@ function M.reset_to_normal()
     game.speed = 1
 end
 
-function M.save_speed()
+local function save_speed()
     storage.previous_speed_index = storage.speed_index
 end
 
@@ -76,7 +76,7 @@ function M.handle_playpause()
         restore_previous()
         game.tick_paused = false
     else
-        M.save_speed()
+        save_speed()
         apply_speed(storage.one_index)
         game.tick_paused = true
     end
@@ -110,7 +110,7 @@ function M.handle_speed_button()
             apply_speed(prev)
         end
     else
-        M.save_speed()
+        save_speed()
         apply_speed(storage.one_index)
     end
 end

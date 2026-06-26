@@ -3,52 +3,40 @@ local gui       = require("gui")
 local speed     = require("speed")
 local damage    = require("damage")
 
-------------------------------------------------------------
-local function init_globals()
-	speed.init_storage()
-end
-
-------------------------------------------------------------
 local function init_player(player)
 	if player.connected then
 		gui.create_gui(player)
 	end
 end
 
-------------------------------------------------------------
 local function init_players()
 	for _, player in pairs(game.players) do
 		init_player(player)
 	end
 end
 
-------------------------------------------------------------
 local function on_init()
-	init_globals()
+	speed.init_storage()
 	init_players()
 end
 
 script.on_init(on_init)
 
-------------------------------------------------------------
 local function on_configuration_changed(data)
 	if data.mod_changes[constants.MOD_NAME] ~= nil then
-		init_globals()
+		speed.init_storage()
 		init_players()
-		gui.update_guis()
 	end
 end
 
 script.on_configuration_changed(on_configuration_changed)
 
-------------------------------------------------------------
 local function on_player_init(event)
 	init_player(game.players[event.player_index])
 end
 
 script.on_event({ defines.events.on_player_created, defines.events.on_player_joined_game }, on_player_init)
 
-------------------------------------------------------------
 local function on_runtime_mod_setting_changed(event)
 	local watched = {
 		[constants.SETTING_MAX_SPEED]      = true,
@@ -63,7 +51,6 @@ end
 
 script.on_event(defines.events.on_runtime_mod_setting_changed, on_runtime_mod_setting_changed)
 
-------------------------------------------------------------
 local action_handlers = {
 	[constants.ACTION_PLAYPAUSE] = speed.handle_playpause,
 	[constants.ACTION_SLOWER]    = speed.handle_slower,
@@ -88,5 +75,4 @@ end
 
 script.on_event(defines.events.on_gui_click, on_gui_click)
 
-------------------------------------------------------------
 script.on_event(defines.events.on_entity_damaged, damage.on_entity_damaged)
