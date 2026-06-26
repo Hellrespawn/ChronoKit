@@ -1,0 +1,8 @@
+{
+  "factorio.versions": [
+    {
+      "name": "Steam install",
+      "factorioPath": "D:/Steam/steamapps/common/Factorio/bin/x64/factorio.exe"
+    }
+  ]
+}

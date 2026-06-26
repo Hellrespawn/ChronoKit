@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------------------------------
+Version: 1.0.0
+Date: 2026-06-26
+  Features:
+    - Play/pause toggle button in the top GUI bar.
+    - Slower and faster buttons to halve or double game speed.
+    - Speed display button: shows current speed multiplier, resets to ×1 or restores saved speed on click.
+    - Automatic speed reset or game pause when a player-force entity takes damage above ×1.
+    - Configurable maximum speed multiplier (2–128×).
+    - Configurable damage action: reset speed to ×1 or pause the game.
+    - Admin-only controls with in-game message for non-admins.
