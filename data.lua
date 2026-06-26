@@ -9,6 +9,38 @@ data:extend(
 			border = false,
 			size   = 15
 		},
+		{
+			type         = "sprite",
+			name         = "chronokit_pause",
+			filename     = "__ChronoKit__/graphics/pause.png",
+			size         = 32,
+			mipmap_count = 2,
+			flags        = { "gui-icon" },
+		},
+		{
+			type         = "sprite",
+			name         = "chronokit_play",
+			filename     = "__ChronoKit__/graphics/play.png",
+			size         = 32,
+			mipmap_count = 2,
+			flags        = { "gui-icon" },
+		},
+		{
+			type         = "sprite",
+			name         = "chronokit_backward_arrow",
+			filename     = "__ChronoKit__/graphics/backward-arrow.png",
+			size         = 32,
+			mipmap_count = 2,
+			flags        = { "gui-icon" },
+		},
+		{
+			type         = "sprite",
+			name         = "chronokit_forward_arrow",
+			filename     = "__ChronoKit__/graphics/forward-arrow.png",
+			size         = 32,
+			mipmap_count = 2,
+			flags        = { "gui-icon" },
+		},
 	}
 )
 

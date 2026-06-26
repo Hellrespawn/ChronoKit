@@ -8,8 +8,8 @@ local BUTTON_SLOWER    = "chronokit_button_slower"
 local BUTTON_FASTER    = "chronokit_button_faster"
 local BUTTON_SPEED     = "chronokit_button_speed"
 
-local SPRITE_PAUSE     = "utility/pause"
-local SPRITE_PLAY      = "utility/play"
+local SPRITE_PAUSE     = "chronokit_pause"
+local SPRITE_PLAY      = "chronokit_play"
 
 function M.create_gui(player)
 	local gui = player.gui.top[GUI_NAME]
@@ -36,14 +36,14 @@ function M.create_gui(player)
 		type   = "sprite-button",
 		name   = BUTTON_SLOWER,
 		tags   = { mod = constants.MOD_TAG, action = constants.ACTION_SLOWER },
-		sprite = "utility/backward_arrow_black",
+		sprite = "chronokit_backward_arrow",
 		style  = "chronokit_sprite_style",
 	})
 	gui.add({
 		type   = "sprite-button",
 		name   = BUTTON_FASTER,
 		tags   = { mod = constants.MOD_TAG, action = constants.ACTION_FASTER },
-		sprite = "utility/forward_arrow_black",
+		sprite = "chronokit_forward_arrow",
 		style  = "chronokit_sprite_style",
 	})
 	gui.add({
