@@ -40,24 +40,14 @@ data:extend(
 			flags        = { "gui-icon" },
 		},
 		{
-			type       = "shortcut",
-			name       = "chronokit-toggle",
-			action     = "lua",
-			toggleable = true,
-			icons = {
-				{
-					icon      = "__ChronoKit__/graphics/play.png",
-					icon_size = 32,
-					tint      = { r = 0.066, g = 0.066, b = 0.066, a = 1 },
-				},
-			},
-			small_icons = {
-				{
-					icon      = "__ChronoKit__/graphics/play.png",
-					icon_size = 32,
-					tint      = { r = 0.066, g = 0.066, b = 0.066, a = 1 },
-				},
-			},
+			type            = "shortcut",
+			name            = "chronokit-toggle",
+			action          = "lua",
+			toggleable      = true,
+			icon            = "__ChronoKit__/graphics/clock.png",
+			icon_size       = 32,
+			small_icon      = "__ChronoKit__/graphics/clock.png",
+			small_icon_size = 32,
 		},
 	}
 )
