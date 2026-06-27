@@ -1,3 +1,8 @@
+if (-not (Get-Command "7z" -ErrorAction SilentlyContinue)) {
+    Write-Error "7-Zip (7z) not found on PATH. Install it from https://www.7-zip.org and ensure it is added to PATH."
+    exit 1
+}
+
 $info = Get-Content "info.json" | ConvertFrom-Json
 $name = $info.name
 $version = $info.version
@@ -31,7 +36,9 @@ if (-not (Test-Path $distDir)) { New-Item -ItemType Directory -Path $distDir | O
 $zipPath = Join-Path $distDir $zipName
 if (Test-Path $zipPath) { Remove-Item $zipPath -Force }
 
-Compress-Archive -Path $staging -DestinationPath $zipPath
+Push-Location (Split-Path $staging -Parent)
+& "7z" a -tzip $zipPath $folderName | Out-Null
+Pop-Location
 
 Remove-Item $staging -Recurse -Force
 
