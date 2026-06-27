@@ -95,4 +95,9 @@ function M.update_guis()
 	end
 end
 
+function M.destroy_gui(player)
+    local existing = player.gui.top[GUI_NAME]
+    if existing then existing.destroy() end
+end
+
 return M
