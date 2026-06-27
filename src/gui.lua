@@ -1,4 +1,4 @@
-local constants         = require("constants")
+local constants         = require("src.constants")
 
 local M                 = {}
 
@@ -23,6 +23,50 @@ local function get_font_color()
 	return no_saved() and constants.colors.gray or constants.colors.white
 end
 
+local function format_speed(s)
+	if s < 1 then
+		return string.format("/%1.1f", 1 / s)
+	else
+		return string.format("x%1.1f", s)
+	end
+end
+
+local function build_speed_tooltip()
+	local lines  = {}
+	local tbl    = storage.speed_table
+	local one    = storage.one_index
+	local cur    = storage.speed_index
+	local paused = game.tick_paused
+
+	local function speed_color(s)
+		if s < 1 then
+			return "0,1,0"
+		elseif s > 1 then
+			return "1,0.5,0.5"
+		else
+			return "1,1,1"
+		end
+	end
+
+	local function entry(label, active, color)
+		if active then
+			return "[font=default-bold][color=" .. color .. "]" .. label .. "[/color][/font]"
+		else
+			return label
+		end
+	end
+
+	for i = 1, #tbl do
+		if i == one then
+			table.insert(lines, entry("x0.0 (paused)", paused, "1,1,1"))
+		end
+		local s = tbl[i]
+		table.insert(lines, entry(format_speed(s), not paused and i == cur, speed_color(s)))
+	end
+
+	return table.concat(lines, "\n")
+end
+
 local function update_gui(player)
 	local outer = player.gui.top[GUI_NAME]
 	if not outer then return end
@@ -45,6 +89,8 @@ local function update_gui(player)
 		inner[BUTTON_SPEED].style.font_color = constants.colors.red
 		inner[BUTTON_PLAY_PAUSE].sprite      = SPRITE_PLAY
 	end
+
+	inner[BUTTON_SPEED].tooltip = build_speed_tooltip()
 end
 
 function M.create_gui(player)

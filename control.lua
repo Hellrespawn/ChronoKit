@@ -1,7 +1,7 @@
-local constants = require("constants")
-local gui       = require("gui")
-local speed     = require("speed")
-local damage    = require("damage")
+local constants = require("src.constants")
+local gui       = require("src.gui")
+local speed     = require("src.speed")
+local damage    = require("src.damage")
 
 local function init_player(player)
 	if not player.connected then return end

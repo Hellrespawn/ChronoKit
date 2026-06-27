@@ -1,6 +1,6 @@
-local constants = require("constants")
-local gui       = require("gui")
-local speed     = require("speed")
+local constants = require("src.constants")
+local gui       = require("src.gui")
+local speed     = require("src.speed")
 
 local M         = {}
 

@@ -1,4 +1,4 @@
-local constants = require("constants")
+local constants = require("src.constants")
 
 local M = {}
 
@@ -14,8 +14,8 @@ function M.build_speed_table()
     local start     = settings.global[constants.SETTING_START_FACTOR].value
     local increment = settings.global[constants.SETTING_STEP_INCREMENT].value
 
-    local slower = {}
-    local s, ratio = 1, start
+    local slower    = {}
+    local s, ratio  = 1, start
     while true do
         s = s / ratio
         if s < min then break end

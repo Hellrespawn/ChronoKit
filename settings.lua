@@ -1,4 +1,4 @@
-local constants = require("constants")
+local constants = require("src.constants")
 
 local function assert_fraction(s)
     local num, den = s:match("^(%d+)/(%d+)$")
