@@ -12,15 +12,21 @@ local BUTTON_SPEED      = "chronokit_button_speed"
 local SPRITE_PAUSE      = "chronokit_pause"
 local SPRITE_PLAY       = "chronokit_play"
 
-local function no_saved()
-	local prev     = storage.previous_speed_index
-	local no_saved = (prev == nil or prev == storage.one_index)
+local function color_to_rich_text(c)
+	return string.format("%g,%g,%g", c.r, c.g, c.b)
+end
 
-	return no_saved
+local TOOLTIP_COLOR_GREEN = color_to_rich_text(constants.colors.green)
+local TOOLTIP_COLOR_RED   = color_to_rich_text(constants.colors.red)
+local TOOLTIP_COLOR_WHITE = color_to_rich_text(constants.colors.white)
+
+local function has_saved_speed()
+	local prev = storage.previous_speed_index
+	return prev ~= nil and prev ~= storage.one_index
 end
 
 local function get_font_color()
-	return no_saved() and constants.colors.gray or constants.colors.white
+	return has_saved_speed() and constants.colors.white or constants.colors.gray
 end
 
 local function format_speed(s)
@@ -28,6 +34,16 @@ local function format_speed(s)
 		return string.format("/%1.1f", 1 / s)
 	else
 		return string.format("x%1.1f", s)
+	end
+end
+
+local function get_speed_color()
+	if game.speed < 1 then
+		return constants.colors.green
+	elseif game.speed > 1 then
+		return constants.colors.red
+	else
+		return get_font_color()
 	end
 end
 
@@ -40,11 +56,11 @@ local function build_speed_tooltip()
 
 	local function speed_color(s)
 		if s < 1 then
-			return "0,1,0"
+			return TOOLTIP_COLOR_GREEN
 		elseif s > 1 then
-			return "1,0.5,0.5"
+			return TOOLTIP_COLOR_RED
 		else
-			return "1,1,1"
+			return TOOLTIP_COLOR_WHITE
 		end
 	end
 
@@ -58,7 +74,7 @@ local function build_speed_tooltip()
 
 	for i = 1, #tbl do
 		if i == one then
-			table.insert(lines, entry("x0.0 (paused)", paused, "1,1,1"))
+			table.insert(lines, entry("x0.0 (paused)", paused, TOOLTIP_COLOR_WHITE))
 		end
 		local s = tbl[i]
 		table.insert(lines, entry(format_speed(s), not paused and i == cur, speed_color(s)))
@@ -76,17 +92,9 @@ local function update_gui(player)
 		inner[BUTTON_SPEED].caption          = "x0.0"
 		inner[BUTTON_SPEED].style.font_color = constants.colors.white
 		inner[BUTTON_PLAY_PAUSE].sprite      = SPRITE_PAUSE
-	elseif game.speed == 1 then
-		inner[BUTTON_SPEED].caption          = "x1.0"
-		inner[BUTTON_SPEED].style.font_color = get_font_color()
-		inner[BUTTON_PLAY_PAUSE].sprite      = SPRITE_PLAY
-	elseif game.speed < 1 then
-		inner[BUTTON_SPEED].caption          = string.format("/%1.1f", 1 / game.speed)
-		inner[BUTTON_SPEED].style.font_color = constants.colors.green
-		inner[BUTTON_PLAY_PAUSE].sprite      = SPRITE_PLAY
 	else
-		inner[BUTTON_SPEED].caption          = string.format("x%1.1f", game.speed)
-		inner[BUTTON_SPEED].style.font_color = constants.colors.red
+		inner[BUTTON_SPEED].caption          = format_speed(game.speed)
+		inner[BUTTON_SPEED].style.font_color = get_speed_color()
 		inner[BUTTON_PLAY_PAUSE].sprite      = SPRITE_PLAY
 	end
 

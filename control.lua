@@ -3,12 +3,16 @@ local gui       = require("src.gui")
 local speed     = require("src.speed")
 local damage    = require("src.damage")
 
+local function mod_enabled()
+	return storage.mod_enabled ~= false
+end
+
 local function init_player(player)
 	if not player.connected then return end
 
-	player.set_shortcut_toggled("chronokit-toggle", storage.mod_enabled ~= false)
+	player.set_shortcut_toggled("chronokit-toggle", mod_enabled())
 
-	if storage.mod_enabled ~= false then
+	if mod_enabled() then
 		gui.create_gui(player)
 	end
 end
@@ -78,10 +82,10 @@ local function on_lua_shortcut(event)
 	local player = game.players[event.player_index]
 	if not player.admin then
 		player.print({ "mod-messages.chronokit-message-admin-only" })
-		player.set_shortcut_toggled("chronokit-toggle", storage.mod_enabled ~= false)
+		player.set_shortcut_toggled("chronokit-toggle", mod_enabled())
 		return
 	end
-	storage.mod_enabled = not (storage.mod_enabled ~= false)
+	storage.mod_enabled = not mod_enabled()
 	if storage.mod_enabled then
 		for _, p in pairs(game.connected_players) do
 			gui.create_gui(p)
@@ -99,7 +103,7 @@ end
 local function on_load()
 	script.on_event(defines.events.on_tick, function()
 		for _, player in pairs(game.connected_players) do
-			player.set_shortcut_toggled("chronokit-toggle", storage.mod_enabled ~= false)
+			player.set_shortcut_toggled("chronokit-toggle", mod_enabled())
 		end
 		script.on_event(defines.events.on_tick, nil)
 	end)

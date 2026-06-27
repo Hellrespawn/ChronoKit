@@ -10,10 +10,7 @@ $include = @(
     "control.lua",
     "data.lua",
     "settings.lua",
-    "speed.lua",
-    "damage.lua",
-    "constants.lua",
-    "gui.lua",
+    "src",
     "locale",
     "graphics",
     "thumbnail.png"
