@@ -71,7 +71,7 @@ local function restore_previous()
     apply_speed(target)
 end
 
-function M.handle_playpause()
+function M.handle_play_pause()
     if game.tick_paused then
         restore_previous()
         game.tick_paused = false

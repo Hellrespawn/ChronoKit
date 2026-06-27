@@ -52,7 +52,7 @@ end
 script.on_event(defines.events.on_runtime_mod_setting_changed, on_runtime_mod_setting_changed)
 
 local action_handlers = {
-	[constants.ACTION_PLAYPAUSE] = speed.handle_playpause,
+	[constants.ACTION_PLAY_PAUSE] = speed.handle_play_pause,
 	[constants.ACTION_SLOWER]    = speed.handle_slower,
 	[constants.ACTION_FASTER]    = speed.handle_faster,
 	[constants.ACTION_SPEED]     = speed.handle_speed_button,
@@ -69,7 +69,7 @@ local function on_gui_click(event)
 		if handler then handler() end
 		gui.update_guis()
 	else
-		player.print({ "mod-messages.chronokit-message-admins-only" })
+		player.print({ "mod-messages.chronokit-message-admin-only" })
 	end
 end
 
