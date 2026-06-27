@@ -89,6 +89,9 @@ function M.handle_slower()
         game.tick_paused = false
     elseif storage.speed_index > 1 then
         apply_speed(storage.speed_index - 1)
+        if storage.speed_index == storage.one_index then
+            storage.previous_speed_index = nil
+        end
     end
 end
 
@@ -98,6 +101,9 @@ function M.handle_faster()
         game.tick_paused = false
     elseif storage.speed_index < #storage.speed_table then
         apply_speed(storage.speed_index + 1)
+        if storage.speed_index == storage.one_index then
+            storage.previous_speed_index = nil
+        end
     end
 end
 

@@ -5,7 +5,9 @@ local damage    = require("damage")
 
 local function init_player(player)
 	if not player.connected then return end
+
 	player.set_shortcut_toggled("chronokit-toggle", storage.mod_enabled ~= false)
+
 	if storage.mod_enabled ~= false then
 		gui.create_gui(player)
 	end
@@ -22,8 +24,6 @@ local function on_init()
 	init_players()
 end
 
-script.on_init(on_init)
-
 local function on_configuration_changed(data)
 	if data.mod_changes[constants.MOD_NAME] ~= nil then
 		speed.init_storage()
@@ -31,13 +31,10 @@ local function on_configuration_changed(data)
 	end
 end
 
-script.on_configuration_changed(on_configuration_changed)
-
 local function on_player_init(event)
 	init_player(game.players[event.player_index])
 end
 
-script.on_event({ defines.events.on_player_created, defines.events.on_player_joined_game }, on_player_init)
 
 local function on_runtime_mod_setting_changed(event)
 	local watched = {
@@ -51,13 +48,12 @@ local function on_runtime_mod_setting_changed(event)
 	gui.update_guis()
 end
 
-script.on_event(defines.events.on_runtime_mod_setting_changed, on_runtime_mod_setting_changed)
 
 local action_handlers = {
 	[constants.ACTION_PLAY_PAUSE] = speed.handle_play_pause,
-	[constants.ACTION_SLOWER]    = speed.handle_slower,
-	[constants.ACTION_FASTER]    = speed.handle_faster,
-	[constants.ACTION_SPEED]     = speed.handle_speed_button,
+	[constants.ACTION_SLOWER]     = speed.handle_slower,
+	[constants.ACTION_FASTER]     = speed.handle_faster,
+	[constants.ACTION_SPEED]      = speed.handle_speed_button,
 }
 
 local function on_gui_click(event)
@@ -75,7 +71,7 @@ local function on_gui_click(event)
 	end
 end
 
-script.on_event(defines.events.on_gui_click, on_gui_click)
+
 
 local function on_lua_shortcut(event)
 	if event.prototype_name ~= "chronokit-toggle" then return end
@@ -100,15 +96,21 @@ local function on_lua_shortcut(event)
 	end
 end
 
-script.on_event(defines.events.on_lua_shortcut, on_lua_shortcut)
-
-script.on_load(function()
+local function on_load()
 	script.on_event(defines.events.on_tick, function()
 		for _, player in pairs(game.connected_players) do
 			player.set_shortcut_toggled("chronokit-toggle", storage.mod_enabled ~= false)
 		end
 		script.on_event(defines.events.on_tick, nil)
 	end)
-end)
+end
 
+script.on_init(on_init)
+script.on_load(on_load)
+script.on_configuration_changed(on_configuration_changed)
+
+script.on_event({ defines.events.on_player_created, defines.events.on_player_joined_game }, on_player_init)
+script.on_event(defines.events.on_runtime_mod_setting_changed, on_runtime_mod_setting_changed)
+script.on_event(defines.events.on_gui_click, on_gui_click)
+script.on_event(defines.events.on_lua_shortcut, on_lua_shortcut)
 script.on_event(defines.events.on_entity_damaged, damage.on_entity_damaged)

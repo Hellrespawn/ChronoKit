@@ -2,7 +2,7 @@ data:extend(
 	{
 		{
 			type   = "font",
-			name   = "chronokit_font_bold",
+			name   = "chronokit_font",
 			from   = "default-bold",
 			border = false,
 			size   = 15
@@ -65,7 +65,7 @@ default_gui.chronokit_button_style =
 {
 	type             = "button_style",
 	parent           = "slot_button",
-	font             = "chronokit_font_bold",
+	font             = "chronokit_font",
 	align            = "center",
 	height           = 28,
 	minimal_width    = 54,

@@ -28,7 +28,3 @@ When a player-force entity takes damage while the game is running above normal s
 |---------|---------|---------|
 | Maximum speed multiplier | 64 | 2, 4, 8, 16, 32, 64, 128 |
 | Action on damage while fast-forwarding | Reset speed | Reset speed, Pause game |
-
-## TODO
-
-- No toggle color isn't noticeable anymore with new toolbar design.

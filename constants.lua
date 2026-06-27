@@ -4,7 +4,7 @@ M.colors                 = {
     white = { r = 1, g = 1, b = 1 },
     green = { r = 0, g = 1, b = 0 },
     red   = { r = 1, g = 0.5, b = 0.5 },
-    gray  = { r = 0.85, g = 0.85, b = 0.85 },
+    gray  = { r = 0.67, g = 0.67, b = 0.67 },
 }
 
 M.MOD_NAME               = "ChronoKit"

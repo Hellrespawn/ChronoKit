@@ -1,16 +1,27 @@
-local constants        = require("constants")
+local constants         = require("constants")
 
-local M                = {}
+local M                 = {}
 
-local GUI_NAME         = "chronokit_gui"
-local INNER_NAME       = "chronokit_inner"
+local GUI_NAME          = "chronokit_gui"
+local INNER_NAME        = "chronokit_inner"
 local BUTTON_PLAY_PAUSE = "chronokit_button_play_pause"
-local BUTTON_SLOWER    = "chronokit_button_slower"
-local BUTTON_FASTER    = "chronokit_button_faster"
-local BUTTON_SPEED     = "chronokit_button_speed"
+local BUTTON_SLOWER     = "chronokit_button_slower"
+local BUTTON_FASTER     = "chronokit_button_faster"
+local BUTTON_SPEED      = "chronokit_button_speed"
 
-local SPRITE_PAUSE     = "chronokit_pause"
-local SPRITE_PLAY      = "chronokit_play"
+local SPRITE_PAUSE      = "chronokit_pause"
+local SPRITE_PLAY       = "chronokit_play"
+
+local function no_saved()
+	local prev     = storage.previous_speed_index
+	local no_saved = (prev == nil or prev == storage.one_index)
+
+	return no_saved
+end
+
+local function get_font_color()
+	return no_saved() and constants.colors.gray or constants.colors.white
+end
 
 local function update_gui(player)
 	local outer = player.gui.top[GUI_NAME]
@@ -20,21 +31,19 @@ local function update_gui(player)
 	if game.tick_paused then
 		inner[BUTTON_SPEED].caption          = "x0.0"
 		inner[BUTTON_SPEED].style.font_color = constants.colors.white
-		inner[BUTTON_PLAY_PAUSE].sprite       = SPRITE_PAUSE
+		inner[BUTTON_PLAY_PAUSE].sprite      = SPRITE_PAUSE
 	elseif game.speed == 1 then
-		local prev                           = storage.previous_speed_index
-		local no_saved                       = (prev == nil or prev == storage.one_index)
 		inner[BUTTON_SPEED].caption          = "x1.0"
-		inner[BUTTON_SPEED].style.font_color = no_saved and constants.colors.gray or constants.colors.white
-		inner[BUTTON_PLAY_PAUSE].sprite       = SPRITE_PLAY
+		inner[BUTTON_SPEED].style.font_color = get_font_color()
+		inner[BUTTON_PLAY_PAUSE].sprite      = SPRITE_PLAY
 	elseif game.speed < 1 then
 		inner[BUTTON_SPEED].caption          = string.format("/%1.1f", 1 / game.speed)
 		inner[BUTTON_SPEED].style.font_color = constants.colors.green
-		inner[BUTTON_PLAY_PAUSE].sprite       = SPRITE_PLAY
+		inner[BUTTON_PLAY_PAUSE].sprite      = SPRITE_PLAY
 	else
 		inner[BUTTON_SPEED].caption          = string.format("x%1.1f", game.speed)
 		inner[BUTTON_SPEED].style.font_color = constants.colors.red
-		inner[BUTTON_PLAY_PAUSE].sprite       = SPRITE_PLAY
+		inner[BUTTON_PLAY_PAUSE].sprite      = SPRITE_PLAY
 	end
 end
 
@@ -82,7 +91,7 @@ function M.create_gui(player)
 		name       = BUTTON_SPEED,
 		tags       = { mod = constants.MOD_TAG, action = constants.ACTION_SPEED },
 		caption    = "",
-		font_color = constants.colors.white,
+		font_color = get_font_color(),
 		style      = "chronokit_button_style",
 	})
 
@@ -96,8 +105,8 @@ function M.update_guis()
 end
 
 function M.destroy_gui(player)
-    local existing = player.gui.top[GUI_NAME]
-    if existing then existing.destroy() end
+	local existing = player.gui.top[GUI_NAME]
+	if existing then existing.destroy() end
 end
 
 return M
