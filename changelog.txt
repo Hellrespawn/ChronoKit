@@ -3,6 +3,7 @@ Version: 1.1.0
 Date: 2026-07-04
   Features:
     - Damage-behaviour cycle button in the top GUI bar, replacing the "Action on damage" setting. Adds a "do nothing" option.
+    - Consolidated play/pause, slower, and faster into a single speed-control button: left-click to speed up, right-click to slow down, shift-click to toggle pause.
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.0
 Date: 2026-06-26

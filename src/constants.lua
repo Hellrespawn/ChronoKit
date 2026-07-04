@@ -19,9 +19,9 @@ M.SETTING_MIN_SPEED      = "chronokit-minimum-speed"
 M.SETTING_START_FACTOR   = "chronokit-starting-factor"
 M.SETTING_STEP_INCREMENT = "chronokit-step-increment"
 
-M.DAMAGE_ACTION_NONE     = "Do nothing"
-M.DAMAGE_ACTION_RESET    = "Reset speed"
-M.DAMAGE_ACTION_PAUSE    = "Pause game"
+M.DAMAGE_ACTION_NONE     = "none"
+M.DAMAGE_ACTION_RESET    = "reset"
+M.DAMAGE_ACTION_PAUSE    = "pause"
 
 M.DAMAGE_ACTION_ORDER    = { M.DAMAGE_ACTION_NONE, M.DAMAGE_ACTION_RESET, M.DAMAGE_ACTION_PAUSE }
 

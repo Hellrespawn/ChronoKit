@@ -19,8 +19,33 @@ local DAMAGE_ACTION_SPRITES = {
 	[constants.DAMAGE_ACTION_PAUSE] = "chronokit_damage_pause",
 }
 
+local DAMAGE_ACTION_LOCALE_KEYS = {
+	[constants.DAMAGE_ACTION_NONE]  = "mod-tooltips.chronokit-damage-action-none",
+	[constants.DAMAGE_ACTION_RESET] = "mod-tooltips.chronokit-damage-action-reset",
+	[constants.DAMAGE_ACTION_PAUSE] = "mod-tooltips.chronokit-damage-action-pause",
+}
+
 local function color_to_rich_text(c)
 	return string.format("%g,%g,%g", c.r, c.g, c.b)
+end
+
+-- Factorio caps LocalisedString concatenation at 20 parameters per level, and
+-- `parts` here can exceed that (its length tracks the user-configurable speed
+-- table). Nest every 19 entries under a continuation slot to stay under the cap.
+local function localised_concat(parts)
+	if #parts <= 20 then
+		return { "", table.unpack(parts) }
+	end
+	local head = {}
+	for i = 1, 19 do
+		head[i] = parts[i]
+	end
+	local tail = {}
+	for i = 20, #parts do
+		tail[#tail + 1] = parts[i]
+	end
+	head[20] = localised_concat(tail)
+	return { "", table.unpack(head) }
 end
 
 local TOOLTIP_COLOR_GREEN = color_to_rich_text(constants.colors.green)
@@ -44,10 +69,25 @@ local function format_speed(s)
 	end
 end
 
+local SPEED_BUCKET_SLOWER = "slower"
+local SPEED_BUCKET_FASTER = "faster"
+local SPEED_BUCKET_NORMAL = "normal"
+
+local function speed_bucket(s)
+	if s < 1 then
+		return SPEED_BUCKET_SLOWER
+	elseif s > 1 then
+		return SPEED_BUCKET_FASTER
+	else
+		return SPEED_BUCKET_NORMAL
+	end
+end
+
 local function get_speed_color()
-	if game.speed < 1 then
+	local bucket = speed_bucket(game.speed)
+	if bucket == SPEED_BUCKET_SLOWER then
 		return constants.colors.green
-	elseif game.speed > 1 then
+	elseif bucket == SPEED_BUCKET_FASTER then
 		return constants.colors.red
 	else
 		return get_font_color()
@@ -55,16 +95,17 @@ local function get_speed_color()
 end
 
 local function build_speed_tooltip()
-	local lines  = {}
+	local parts  = {}
 	local tbl    = storage.speed_table
 	local one    = storage.one_index
 	local cur    = storage.speed_index
 	local paused = game.tick_paused
 
 	local function speed_color(s)
-		if s < 1 then
+		local bucket = speed_bucket(s)
+		if bucket == SPEED_BUCKET_SLOWER then
 			return TOOLTIP_COLOR_GREEN
-		elseif s > 1 then
+		elseif bucket == SPEED_BUCKET_FASTER then
 			return TOOLTIP_COLOR_RED
 		else
 			return TOOLTIP_COLOR_WHITE
@@ -79,29 +120,48 @@ local function build_speed_tooltip()
 		end
 	end
 
-	for i = 1, #tbl do
-		if i == one then
-			table.insert(lines, entry("x0.0 (paused)", paused, TOOLTIP_COLOR_WHITE))
+	local function paused_entry(active)
+		if active then
+			return { "", "[font=default-bold][color=" .. TOOLTIP_COLOR_WHITE .. "]", { "mod-tooltips.chronokit-speed-paused" }, "[/color][/font]" }
+		else
+			return { "mod-tooltips.chronokit-speed-paused" }
 		end
-		local s = tbl[i]
-		table.insert(lines, entry(format_speed(s), not paused and i == cur, speed_color(s)))
 	end
 
-	return table.concat(lines, "\n")
+	for i = 1, #tbl do
+		if i == one then
+			table.insert(parts, paused_entry(paused))
+			table.insert(parts, "\n")
+		end
+		local s = tbl[i]
+		table.insert(parts, entry(format_speed(s), not paused and i == cur, speed_color(s)))
+		if i < #tbl then
+			table.insert(parts, "\n")
+		end
+	end
+
+	return localised_concat(parts)
 end
 
 local function build_damage_action_tooltip()
-	return "Damage behaviour: " .. storage.damage_action ..
-		"\nClick to cycle: " .. table.concat(constants.DAMAGE_ACTION_ORDER, " → ") ..
-		"\nRight-click to cycle backwards"
+	local order = constants.DAMAGE_ACTION_ORDER
+	return {
+		"mod-tooltips.chronokit-damage-action",
+		{ DAMAGE_ACTION_LOCALE_KEYS[storage.damage_action] },
+		{ DAMAGE_ACTION_LOCALE_KEYS[order[1]] },
+		{ DAMAGE_ACTION_LOCALE_KEYS[order[2]] },
+		{ DAMAGE_ACTION_LOCALE_KEYS[order[3]] },
+	}
 end
 
 local function get_speed_control_sprite()
 	if game.tick_paused then
 		return SPRITE_PAUSE
-	elseif game.speed < 1 then
+	end
+	local bucket = speed_bucket(game.speed)
+	if bucket == SPEED_BUCKET_SLOWER then
 		return SPRITE_SLOWER
-	elseif game.speed > 1 then
+	elseif bucket == SPEED_BUCKET_FASTER then
 		return SPRITE_FASTER
 	else
 		return SPRITE_PLAY
@@ -109,7 +169,7 @@ local function get_speed_control_sprite()
 end
 
 local function build_speed_control_tooltip()
-	return "Click: increase speed\nRight-click: decrease speed\nShift-click: toggle pause"
+	return { "mod-tooltips.chronokit-speed-control" }
 end
 
 local function update_gui(player)

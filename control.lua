@@ -54,9 +54,9 @@ end
 
 
 local action_handlers = {
-	[constants.ACTION_SPEED_CONTROL] = { forward = speed.handle_faster, reverse = speed.handle_slower, shift = speed.handle_play_pause },
-	[constants.ACTION_SPEED]         = { forward = speed.handle_speed_button },
-	[constants.ACTION_DAMAGE_ACTION] = { forward = damage.handle_cycle, reverse = damage.handle_cycle_reverse },
+	[constants.ACTION_SPEED_CONTROL] = { next = speed.handle_faster, previous = speed.handle_slower, shift = speed.handle_play_pause },
+	[constants.ACTION_SPEED]         = { next = speed.handle_speed_button },
+	[constants.ACTION_DAMAGE_ACTION] = { next = damage.handle_cycle, previous = damage.handle_cycle_reverse },
 }
 
 local function on_gui_click(event)
@@ -70,13 +70,11 @@ local function on_gui_click(event)
 		if entry then
 			local handler
 			if event.shift and entry.shift then
-				if event.button == defines.mouse_button_type.left then
-					handler = entry.shift
-				end
+				handler = event.button == defines.mouse_button_type.left and entry.shift or nil
 			elseif event.button == defines.mouse_button_type.right then
-				handler = entry.reverse
+				handler = entry.previous
 			else
-				handler = entry.forward
+				handler = entry.next
 			end
 			if handler then handler() end
 		end
