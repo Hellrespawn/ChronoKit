@@ -54,10 +54,11 @@ end
 
 
 local action_handlers = {
-	[constants.ACTION_PLAY_PAUSE] = speed.handle_play_pause,
-	[constants.ACTION_SLOWER]     = speed.handle_slower,
-	[constants.ACTION_FASTER]     = speed.handle_faster,
-	[constants.ACTION_SPEED]      = speed.handle_speed_button,
+	[constants.ACTION_PLAY_PAUSE]    = { forward = speed.handle_play_pause },
+	[constants.ACTION_SLOWER]        = { forward = speed.handle_slower },
+	[constants.ACTION_FASTER]        = { forward = speed.handle_faster },
+	[constants.ACTION_SPEED]         = { forward = speed.handle_speed_button },
+	[constants.ACTION_DAMAGE_ACTION] = { forward = damage.handle_cycle, reverse = damage.handle_cycle_reverse },
 }
 
 local function on_gui_click(event)
@@ -67,8 +68,11 @@ local function on_gui_click(event)
 	local player = game.players[event.player_index]
 
 	if player.admin then
-		local handler = action_handlers[tags.action]
-		if handler then handler() end
+		local entry = action_handlers[tags.action]
+		if entry then
+			local handler = (event.button == defines.mouse_button_type.right and entry.reverse) or entry.forward
+			if handler then handler() end
+		end
 		gui.update_guis()
 	else
 		player.print({ "mod-messages.chronokit-message-admin-only" })

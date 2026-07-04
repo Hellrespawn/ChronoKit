@@ -24,13 +24,6 @@ data:extend({
         allowed_values = min_speed_values,
     },
     {
-        type           = "string-setting",
-        name           = constants.SETTING_DAMAGE_ACTION,
-        setting_type   = "runtime-global",
-        default_value  = constants.DAMAGE_ACTION_RESET,
-        allowed_values = { constants.DAMAGE_ACTION_RESET, constants.DAMAGE_ACTION_PAUSE },
-    },
-    {
         type          = "double-setting",
         name          = constants.SETTING_START_FACTOR,
         setting_type  = "runtime-global",

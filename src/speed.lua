@@ -50,6 +50,7 @@ function M.init_storage()
 	M.build_speed_table()
 	reset_state()
 	storage.mod_enabled = storage.mod_enabled ~= false
+	storage.damage_action = storage.damage_action or constants.DAMAGE_ACTION_RESET
 end
 
 function M.reset_to_normal()

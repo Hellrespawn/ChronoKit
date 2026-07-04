@@ -14,14 +14,17 @@ M.ACTION_PLAY_PAUSE      = "play_pause"
 M.ACTION_SLOWER          = "slower"
 M.ACTION_FASTER          = "faster"
 M.ACTION_SPEED           = "speed"
+M.ACTION_DAMAGE_ACTION   = "damage_action"
 
 M.SETTING_MAX_SPEED      = "chronokit-maximum-speed"
 M.SETTING_MIN_SPEED      = "chronokit-minimum-speed"
-M.SETTING_DAMAGE_ACTION  = "chronokit-damage-action"
 M.SETTING_START_FACTOR   = "chronokit-starting-factor"
 M.SETTING_STEP_INCREMENT = "chronokit-step-increment"
 
+M.DAMAGE_ACTION_NONE     = "Do nothing"
 M.DAMAGE_ACTION_RESET    = "Reset speed"
 M.DAMAGE_ACTION_PAUSE    = "Pause game"
+
+M.DAMAGE_ACTION_ORDER    = { M.DAMAGE_ACTION_NONE, M.DAMAGE_ACTION_RESET, M.DAMAGE_ACTION_PAUSE }
 
 return M

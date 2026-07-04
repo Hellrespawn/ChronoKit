@@ -2,15 +2,22 @@ local constants         = require("src.constants")
 
 local M                 = {}
 
-local GUI_NAME          = "chronokit_gui"
-local INNER_NAME        = "chronokit_inner"
-local BUTTON_PLAY_PAUSE = "chronokit_button_play_pause"
-local BUTTON_SLOWER     = "chronokit_button_slower"
-local BUTTON_FASTER     = "chronokit_button_faster"
-local BUTTON_SPEED      = "chronokit_button_speed"
+local GUI_NAME            = "chronokit_gui"
+local INNER_NAME          = "chronokit_inner"
+local BUTTON_PLAY_PAUSE   = "chronokit_button_play_pause"
+local BUTTON_SLOWER       = "chronokit_button_slower"
+local BUTTON_FASTER       = "chronokit_button_faster"
+local BUTTON_SPEED        = "chronokit_button_speed"
+local BUTTON_DAMAGE_ACTION = "chronokit_button_damage_action"
 
-local SPRITE_PAUSE      = "chronokit_pause"
-local SPRITE_PLAY       = "chronokit_play"
+local SPRITE_PAUSE        = "chronokit_pause"
+local SPRITE_PLAY         = "chronokit_play"
+
+local DAMAGE_ACTION_SPRITES = {
+	[constants.DAMAGE_ACTION_NONE]  = "chronokit_damage_none",
+	[constants.DAMAGE_ACTION_RESET] = "chronokit_damage_reset",
+	[constants.DAMAGE_ACTION_PAUSE] = "chronokit_damage_pause",
+}
 
 local function color_to_rich_text(c)
 	return string.format("%g,%g,%g", c.r, c.g, c.b)
@@ -83,6 +90,12 @@ local function build_speed_tooltip()
 	return table.concat(lines, "\n")
 end
 
+local function build_damage_action_tooltip()
+	return "Damage behaviour: " .. storage.damage_action ..
+		"\nClick to cycle: " .. table.concat(constants.DAMAGE_ACTION_ORDER, " → ") ..
+		"\nRight-click to cycle backwards"
+end
+
 local function update_gui(player)
 	local outer = player.gui.top[GUI_NAME]
 	if not outer then return end
@@ -99,6 +112,9 @@ local function update_gui(player)
 	end
 
 	inner[BUTTON_SPEED].tooltip = build_speed_tooltip()
+
+	inner[BUTTON_DAMAGE_ACTION].sprite = DAMAGE_ACTION_SPRITES[storage.damage_action]
+	inner[BUTTON_DAMAGE_ACTION].tooltip = build_damage_action_tooltip()
 end
 
 function M.create_gui(player)
@@ -147,6 +163,13 @@ function M.create_gui(player)
 		caption    = "",
 		font_color = get_font_color(),
 		style      = "chronokit_button_style",
+	})
+	inner.add({
+		type   = "sprite-button",
+		name   = BUTTON_DAMAGE_ACTION,
+		tags   = { mod = constants.MOD_TAG, action = constants.ACTION_DAMAGE_ACTION },
+		style  = "chronokit_sprite_style",
+		sprite = DAMAGE_ACTION_SPRITES[storage.damage_action],
 	})
 
 	update_gui(player)
