@@ -10,7 +10,7 @@ All controls require administrator privileges. The shortcut bar button toggles C
 |--------|--------|
 | ▶ / ⏸ / `<` / `>` | Left-click: increase speed. Right-click: decrease speed. Shift-click: toggle pause, restoring the previous speed. |
 | `x1.0` / `xN.N` / `/N.N` | At ×1 or paused: restore saved speed. While fast-forwarding: reset to ×1. |
-| ⃝ / ↻ / ⃠ | Left-click: cycle the damage behaviour forward (do nothing → reset speed → pause game). Right-click: cycle backwards. |
+| • / 🔄 / 🚫 | Left-click: cycle the damage behaviour forward (do nothing → reset speed → pause game). Right-click: cycle backwards. |
 
 Speed is shown as `xN.N` (above normal, red), `/N.N` (below normal, green), or `x1.0` (normal, white). While paused it shows `x0.0`. Hovering the speed button shows the full speed table.
 
@@ -18,9 +18,9 @@ Speed is shown as `xN.N` (above normal, red), `/N.N` (below normal, green), or `
 
 When a player-force entity takes damage while the game is running above normal speed, ChronoKit automatically reacts. The reaction is set by the third toolbar button (to the right of the speed indicator), which cycles through three states: left-click moves forward, right-click moves backward.
 
-- **Do nothing** (⃝ dim ring) — no reaction.
-- **Reset speed** (↻ refresh arrow, default) — speed resets to ×1 and a GPS link is printed to chat.
-- **Pause game** (⃠ no-entry sign) — the game pauses and a GPS link is printed to chat.
+- **Do nothing** (• dim dot) — no reaction.
+- **Reset speed** (🔄 refresh arrow, default) — speed resets to ×1 and a GPS link is printed to chat.
+- **Pause game** (🚫 no-entry sign) — the game pauses and a GPS link is printed to chat.
 
 ## Settings
 
