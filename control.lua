@@ -54,9 +54,7 @@ end
 
 
 local action_handlers = {
-	[constants.ACTION_PLAY_PAUSE]    = { forward = speed.handle_play_pause },
-	[constants.ACTION_SLOWER]        = { forward = speed.handle_slower },
-	[constants.ACTION_FASTER]        = { forward = speed.handle_faster },
+	[constants.ACTION_SPEED_CONTROL] = { forward = speed.handle_faster, reverse = speed.handle_slower, shift = speed.handle_play_pause },
 	[constants.ACTION_SPEED]         = { forward = speed.handle_speed_button },
 	[constants.ACTION_DAMAGE_ACTION] = { forward = damage.handle_cycle, reverse = damage.handle_cycle_reverse },
 }
@@ -70,7 +68,16 @@ local function on_gui_click(event)
 	if player.admin then
 		local entry = action_handlers[tags.action]
 		if entry then
-			local handler = (event.button == defines.mouse_button_type.right and entry.reverse) or entry.forward
+			local handler
+			if event.shift and entry.shift then
+				if event.button == defines.mouse_button_type.left then
+					handler = entry.shift
+				end
+			elseif event.button == defines.mouse_button_type.right then
+				handler = entry.reverse
+			else
+				handler = entry.forward
+			end
 			if handler then handler() end
 		end
 		gui.update_guis()

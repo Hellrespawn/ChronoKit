@@ -4,14 +4,14 @@ local M                 = {}
 
 local GUI_NAME            = "chronokit_gui"
 local INNER_NAME          = "chronokit_inner"
-local BUTTON_PLAY_PAUSE   = "chronokit_button_play_pause"
-local BUTTON_SLOWER       = "chronokit_button_slower"
-local BUTTON_FASTER       = "chronokit_button_faster"
+local BUTTON_SPEED_CONTROL = "chronokit_button_speed_control"
 local BUTTON_SPEED        = "chronokit_button_speed"
 local BUTTON_DAMAGE_ACTION = "chronokit_button_damage_action"
 
 local SPRITE_PAUSE        = "chronokit_pause"
 local SPRITE_PLAY         = "chronokit_play"
+local SPRITE_SLOWER       = "chronokit_backward_arrow"
+local SPRITE_FASTER       = "chronokit_forward_arrow"
 
 local DAMAGE_ACTION_SPRITES = {
 	[constants.DAMAGE_ACTION_NONE]  = "chronokit_damage_none",
@@ -96,6 +96,22 @@ local function build_damage_action_tooltip()
 		"\nRight-click to cycle backwards"
 end
 
+local function get_speed_control_sprite()
+	if game.tick_paused then
+		return SPRITE_PAUSE
+	elseif game.speed < 1 then
+		return SPRITE_SLOWER
+	elseif game.speed > 1 then
+		return SPRITE_FASTER
+	else
+		return SPRITE_PLAY
+	end
+end
+
+local function build_speed_control_tooltip()
+	return "Click: increase speed\nRight-click: decrease speed\nShift-click: toggle pause"
+end
+
 local function update_gui(player)
 	local outer = player.gui.top[GUI_NAME]
 	if not outer then return end
@@ -104,14 +120,15 @@ local function update_gui(player)
 	if game.tick_paused then
 		inner[BUTTON_SPEED].caption          = "x0.0"
 		inner[BUTTON_SPEED].style.font_color = constants.colors.white
-		inner[BUTTON_PLAY_PAUSE].sprite      = SPRITE_PAUSE
 	else
 		inner[BUTTON_SPEED].caption          = format_speed(game.speed)
 		inner[BUTTON_SPEED].style.font_color = get_speed_color()
-		inner[BUTTON_PLAY_PAUSE].sprite      = SPRITE_PLAY
 	end
 
 	inner[BUTTON_SPEED].tooltip = build_speed_tooltip()
+
+	inner[BUTTON_SPEED_CONTROL].sprite  = get_speed_control_sprite()
+	inner[BUTTON_SPEED_CONTROL].tooltip = build_speed_control_tooltip()
 
 	inner[BUTTON_DAMAGE_ACTION].sprite = DAMAGE_ACTION_SPRITES[storage.damage_action]
 	inner[BUTTON_DAMAGE_ACTION].tooltip = build_damage_action_tooltip()
@@ -137,24 +154,10 @@ function M.create_gui(player)
 
 	inner.add({
 		type   = "sprite-button",
-		name   = BUTTON_PLAY_PAUSE,
-		tags   = { mod = constants.MOD_TAG, action = constants.ACTION_PLAY_PAUSE },
+		name   = BUTTON_SPEED_CONTROL,
+		tags   = { mod = constants.MOD_TAG, action = constants.ACTION_SPEED_CONTROL },
 		style  = "chronokit_sprite_style",
 		sprite = SPRITE_PLAY,
-	})
-	inner.add({
-		type   = "sprite-button",
-		name   = BUTTON_SLOWER,
-		tags   = { mod = constants.MOD_TAG, action = constants.ACTION_SLOWER },
-		sprite = "chronokit_backward_arrow",
-		style  = "chronokit_sprite_style",
-	})
-	inner.add({
-		type   = "sprite-button",
-		name   = BUTTON_FASTER,
-		tags   = { mod = constants.MOD_TAG, action = constants.ACTION_FASTER },
-		sprite = "chronokit_forward_arrow",
-		style  = "chronokit_sprite_style",
 	})
 	inner.add({
 		type       = "button",

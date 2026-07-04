@@ -10,9 +10,7 @@ M.colors                 = {
 M.MOD_NAME               = "ChronoKit"
 M.MOD_TAG                = "chronokit"
 
-M.ACTION_PLAY_PAUSE      = "play_pause"
-M.ACTION_SLOWER          = "slower"
-M.ACTION_FASTER          = "faster"
+M.ACTION_SPEED_CONTROL   = "speed_control"
 M.ACTION_SPEED           = "speed"
 M.ACTION_DAMAGE_ACTION   = "damage_action"
 
