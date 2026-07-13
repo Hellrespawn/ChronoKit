@@ -27,8 +27,8 @@ When a player-force entity takes damage while the game is running above normal s
 | Setting | Default | Options |
 |---------|---------|---------|
 | Maximum speed multiplier | 64× | 2, 4, 8, 16, 32, 64, 128 |
-| Minimum speed | 1/8 | 1/2, 1/4, 1/8 |
-| Starting factor | 1.5 | Any value > 1 |
-| Step increment | 0.25 | Any value ≥ 0 |
+| Minimum speed divisor | 1/8 | 1/2, 1/4, 1/8 |
+| Starting step factor (Advanced) | 1.5 | Any value > 1 |
+| Step factor increment (Advanced) | 0.25 | Any value ≥ 0 |
 
 The speed table is built from the minimum speed up to the maximum, starting at ×1 and multiplying/dividing by the starting factor (which increases by the step increment at each step).
